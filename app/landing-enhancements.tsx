@@ -3,42 +3,42 @@
 import { useEffect } from "react";
 
 const story = [
-  ["Entrada", "XML recebido", "NFe_0826.xml"],
-  ["Leitura", "Documento reconhecido", "NF-e · Agosto 2026"],
-  ["Contexto", "Empresa associada", "Clínica Prime"],
-  ["Ação", "Pendência resolvida", "Documentação fiscal"],
-  ["Controle", "Operação atualizada.", "128 empresas sincronizadas"],
+  ["Captura", "NF-e recebida", "Documento fiscal"],
+  ["Organização", "XML centralizado", "Empresa e competência"],
+  ["Conferência", "SPED em análise", "Informações cruzadas"],
+  ["Monitoramento", "Declaração atualizada", "Status acompanhado"],
+  ["Controle", "Operação fiscal em foco", "Carteira acompanhada"],
 ];
 
 const assistantModes = [
   {
-    label: "Pendências",
-    question: "Quais clientes ainda não enviaram os documentos deste mês?",
-    answer: "14 empresas ainda possuem pendências.",
+    label: "Declarações",
+    question: "Quais clientes têm declarações que precisam de acompanhamento?",
+    answer: "Há declarações com mudança de status na carteira.",
     rows: [
-      ["Almeida Comércio", "Extrato bancário", "Hoje"],
-      ["Studio Prime", "XML", "Amanhã"],
-      ["Clínica Essence", "Documentação fiscal", "16 ago"],
+      ["Almeida Comércio", "Declaração em revisão", "Hoje"],
+      ["Studio Prime", "Status atualizado", "Acompanhar"],
+      ["Clínica Essence", "Envio pendente", "Esta semana"],
     ],
   },
   {
-    label: "Fechamentos",
-    question: "Quem está pronto para fechamento?",
-    answer: "17 empresas estão com a etapa de conferência concluída.",
+    label: "Parcelamentos",
+    question: "Quais parcelamentos precisam de atenção?",
+    answer: "Há parcelamentos que exigem revisão da equipe.",
     rows: [
-      ["Clínica Prime", "Conferência concluída", "Pronta"],
-      ["NovaTech", "Documentos conferidos", "Pronta"],
-      ["Atlas Serviços", "Revisão final", "Em revisão"],
+      ["Clínica Prime", "Parcela próxima", "Revisar"],
+      ["NovaTech", "Situação regular", "Acompanhar"],
+      ["Atlas Serviços", "Atualização necessária", "Pendente"],
     ],
   },
   {
-    label: "Atenção hoje",
-    question: "O que exige atenção hoje?",
-    answer: "9 pontos merecem atenção antes do fim do dia.",
+    label: "Atenção fiscal",
+    question: "O que mudou na situação fiscal da carteira hoje?",
+    answer: "Estes pontos merecem contexto antes da próxima ação.",
     rows: [
-      ["Atlas Serviços", "Obrigação próxima", "2 dias"],
-      ["Almeida Comércio", "Extrato não recebido", "Hoje"],
-      ["Studio Prime", "Conferência aguardando", "16 ago"],
+      ["Atlas Serviços", "Obrigação próxima", "Priorizar"],
+      ["Almeida Comércio", "Documento não localizado", "Hoje"],
+      ["Studio Prime", "SPED aguardando conferência", "Revisar"],
     ],
   },
 ];
@@ -109,19 +109,18 @@ export function LandingEnhancements() {
     const stage = document.querySelector<HTMLElement>(".hero-stage");
     const storyCard = document.querySelector<HTMLElement>(".hero-story-card");
     const storyProgress = document.querySelectorAll<HTMLElement>(".hero-story-progress span");
-    const storyTimer = window.setInterval(() => {
-      currentStory = (currentStory + 1) % story.length;
+    const renderStory = (storyIndex: number) => {
       stage?.classList.forEach((name) => {
         if (name.startsWith("story-step-")) stage.classList.remove(name);
       });
-      stage?.classList.add(`story-step-${currentStory}`);
+      stage?.classList.add(`story-step-${storyIndex}`);
 
       if (storyCard) {
-        const [label, title, detail] = story[currentStory];
+        const [label, title, detail] = story[storyIndex];
         const index = storyCard.querySelector<HTMLElement>(".story-index");
         const copy = storyCard.querySelector<HTMLElement>(".story-index + div");
         const arrow = storyCard.querySelector<HTMLElement>(":scope > i");
-        if (index) index.textContent = `0${currentStory + 1}`;
+        if (index) index.textContent = `0${storyIndex + 1}`;
         if (copy) {
           const small = copy.querySelector("small");
           const strong = copy.querySelector("strong");
@@ -131,12 +130,21 @@ export function LandingEnhancements() {
           if (span) span.textContent = detail;
         }
         if (arrow) {
-          arrow.textContent = currentStory === story.length - 1 ? "✓" : "→";
-          arrow.classList.toggle("complete", currentStory === story.length - 1);
+          arrow.textContent = storyIndex === story.length - 1 ? "✓" : "→";
+          arrow.classList.toggle("complete", storyIndex === story.length - 1);
         }
       }
 
-      storyProgress.forEach((step, index) => step.classList.toggle("active", index <= currentStory));
+      storyProgress.forEach((step, index) => {
+        const marker = step.querySelector("i");
+        if (marker) step.replaceChildren(marker, document.createTextNode(story[index][0]));
+        step.classList.toggle("active", index <= storyIndex);
+      });
+    };
+    renderStory(currentStory);
+    const storyTimer = window.setInterval(() => {
+      currentStory = (currentStory + 1) % story.length;
+      renderStory(currentStory);
     }, 2400);
 
     const portfolioFilters = [...document.querySelectorAll<HTMLButtonElement>(".filter-tabs button")];
@@ -169,7 +177,10 @@ export function LandingEnhancements() {
       const mode = assistantModes[modeIndex];
       if (assistantQuestion) assistantQuestion.textContent = mode.question;
       if (assistantAnswer) assistantAnswer.textContent = mode.answer;
-      suggestionButtons.forEach((button, index) => button.classList.toggle("active", index === modeIndex));
+      suggestionButtons.forEach((button, index) => {
+        button.textContent = assistantModes[index].label;
+        button.classList.toggle("active", index === modeIndex);
+      });
       resultRows.forEach((row, index) => {
         const [name, detail, status] = mode.rows[index];
         const cells = row.querySelectorAll<HTMLElement>(":scope > span");
@@ -184,6 +195,7 @@ export function LandingEnhancements() {
     };
     suggestionButtons.forEach((button, index) => listen(button, "click", () => renderAssistant(index)));
     listen(document.querySelector(".new-query"), "click", () => renderAssistant(0));
+    renderAssistant(0);
 
     const setupItems = [...document.querySelectorAll<HTMLElement>(".setup-wizard aside ol li")];
     const setupProgress = document.querySelector<HTMLElement>(".setup-progress");
