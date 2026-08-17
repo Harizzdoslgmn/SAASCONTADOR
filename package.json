@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint app --max-warnings=0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "next": "latest",
@@ -16,6 +18,13 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "typescript": "latest"
+    "eslint": "9.39.2",
+    "eslint-config-next": "latest",
+    "typescript": "6.0.2"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "unrs-resolver"
+    ]
   }
 }
