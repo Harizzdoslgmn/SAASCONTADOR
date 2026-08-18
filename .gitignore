@@ -5,3 +5,4 @@ node_modules/
 review-*.png
 .env
 output/
+remotion/public/audio/*.wav

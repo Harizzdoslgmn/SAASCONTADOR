@@ -1,10 +1,12 @@
 import type {CSSProperties, ReactNode} from "react";
 import {
   AbsoluteFill,
+  Audio,
   Easing,
   Sequence,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -645,6 +647,7 @@ export const NexoDocumentosVideo = () => {
   return (
     <AbsoluteFill style={{background: palette.ink}}>
       <Background />
+      <Audio src={staticFile("audio/nexo-soundtrack.wav")} volume={0.9} />
       <Sequence from={0} durationInFrames={105} premountFor={30}>
         <HookScene />
       </Sequence>

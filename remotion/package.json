@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "soundtrack": "node scripts/generate-soundtrack.mjs",
+    "prestudio": "pnpm soundtrack",
     "studio": "remotion studio index.ts",
+    "prerender": "pnpm soundtrack",
     "render": "remotion render index.ts NexoDocumentos ../public/social/post-04-documentos-automaticos.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p"
   },
   "dependencies": {
