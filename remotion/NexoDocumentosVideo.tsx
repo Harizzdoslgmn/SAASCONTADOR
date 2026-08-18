@@ -643,11 +643,29 @@ const FinalScene = () => {
   );
 };
 
+const SoundDesign = () => (
+  <>
+    <Audio src={staticFile("audio/nexo-soundtrack.wav")} volume={0.42} />
+    <Sequence from={12}>
+      <Audio src={staticFile("audio/voz-01-abertura.mp3")} volume={1.65} playbackRate={1.1} />
+    </Sequence>
+    <Sequence from={96}>
+      <Audio src={staticFile("audio/voz-02-captura.mp3")} volume={1.65} playbackRate={1.1} />
+    </Sequence>
+    <Sequence from={232}>
+      <Audio src={staticFile("audio/voz-03-organizacao.mp3")} volume={1.65} playbackRate={1.1} />
+    </Sequence>
+    <Sequence from={304}>
+      <Audio src={staticFile("audio/voz-04-fechamento.mp3")} volume={1.65} playbackRate={1.1} />
+    </Sequence>
+  </>
+);
+
 export const NexoDocumentosVideo = () => {
   return (
     <AbsoluteFill style={{background: palette.ink}}>
       <Background />
-      <Audio src={staticFile("audio/nexo-soundtrack.wav")} volume={0.9} />
+      <SoundDesign />
       <Sequence from={0} durationInFrames={105} premountFor={30}>
         <HookScene />
       </Sequence>
