@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint app --max-warnings=0",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "remotion:studio": "pnpm --dir remotion studio",
+    "remotion:render": "pnpm --dir remotion render"
   },
   "dependencies": {
     "next": "latest",
